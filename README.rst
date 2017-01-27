@@ -29,3 +29,9 @@ Features
 * Update Node
 * Delete Node
 * Scan Node
+
+upguard_node
+------------
+.. _moduledoc: upguard_node_module.html
+
+View documentation moduledoc_
