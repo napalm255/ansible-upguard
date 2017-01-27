@@ -1,11 +1,12 @@
-.. include:: ../README.rst
+======================
+Ansible UpGuard Module
+======================
 
-
-Modules
--------
+Table of Contents
+-----------------
 
 .. toctree::
    :maxdepth: 2
 
+   readme
    upguard_node
-
