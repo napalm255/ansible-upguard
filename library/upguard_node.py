@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# (c) 2016, Brad Gibson <napalm255@gmail.com>,
-#           Richard Noble <nobler1050@gmail.com>
+# (c) 2016, Brad Gibson <napalm255@gmail.com>
 #
 # This file is a 3rd Party module for Ansible
 #
@@ -25,18 +24,17 @@ from __future__ import absolute_import, unicode_literals
 DOCUMENTATION = '''
 ---
 module: upguard_node
-author: "Brad Gibson, Richard Noble"
+author: "Brad Gibson"
 version_added: "2.2"
-short_description: Create Upguard Rule
+short_description: Manage UpGuard Node
 requires: [ requests==2.13.0 ]
 description:
-    - Create Upguard Rule
+    - Manage UpGuard Node
 options:
     url:
         required: true
         description:
-            - The url of the Upguard Management Console. i.e.
-            https://upguard.example.com
+            - The url of the Upguard Management Console. i.e.  https://upguard.example.com
     port:
         required: false
         default: 443
@@ -50,21 +48,37 @@ options:
         required: true
         description:
             - The password of the Upguard Management Console.
+    name:
+        required: true
+        description:
+            - The name of the node.
+    node_type:
+        required: true
+        description:
+            - The node type.
     gather_facts:
         required: false
         default: false
         description:
-            - Return list of Nodes.
-    name:
+            - Return list of nodes.
+    state:
         required: false
         description:
-            - The name of the Node to manage.
+            - Create or delete node.
+    properties:
+        required: false
+        description:
+            - Properties of the node.
+    scan:
+        required: false
+        default: false
+        description:
+            - Scan node.
     validate_certs:
         required: false
         default: true
         description:
-            - Allows connection when SSL certificates are not valid. Set to
-            false when certificates are not trusted.
+            - Allows connection when SSL certificates are not valid. Set to false when certificates are not trusted.
 '''
 
 EXAMPLES = '''
