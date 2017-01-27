@@ -37,7 +37,7 @@ Options
     <td>gather_facts<br/><div style="font-size: small;"></div></td>
     <td>no</td>
     <td></td>
-        <td><ul></ul></td>
+        <td><ul><li>True</li><li>False</li></ul></td>
         <td><div>Return list of nodes.</div></td></tr>
             <tr>
     <td>name<br/><div style="font-size: small;"></div></td>
@@ -67,8 +67,8 @@ Options
     <td>properties<br/><div style="font-size: small;"></div></td>
     <td>no</td>
     <td></td>
-        <td><ul></ul></td>
-        <td><div>Properties of the node.</div></td></tr>
+        <td><ul><li>dict</li></ul></td>
+        <td><div>Properties of the node. See https://support.upguard.com/upguard/nodes-api-v2.html#create.</div></td></tr>
             <tr>
     <td>scan<br/><div style="font-size: small;"></div></td>
     <td>no</td>
@@ -109,13 +109,14 @@ Examples
 
  ::
 
-    # create node
+    # create/update node
     - upguard_node:
         url: "https://upguard.example.com"
         username: "upguard_user"
         password: "upguard_pass"
         name: "node_name"
-        state: present
+        node_type: "SV"
+        state: "present"
     
     # delete node
     - upguard_node:
@@ -123,7 +124,38 @@ Examples
         username: "upguard_user"
         password: "upguard_pass"
         name: "node_name"
-        state: absent
+        node_type: "SV"
+        state: "absent"
+    
+    # create/update and scan node
+    - upguard_node:
+        url: "https://upguard.example.com"
+        username: "upguard_user"
+        password: "upguard_pass"
+        name: "node_name"
+        node_type: "SV"
+        state: "present"
+        scan: true
+    
+    # scan node
+    - upguard_node:
+        url: "https://upguard.example.com"
+        username: "upguard_user"
+        password: "upguard_pass"
+        name: "node_name"
+        node_type: "SV"
+        scan: true
+    
+    # gather facts
+    - upguard_node:
+        url: "https://upguard.example.com"
+        username: "upguard_user"
+        password: "upguard_pass"
+        name: "node_name"
+        node_type: "SV"
+        gather_facts: true
+      register: results
+    
 
 
 
