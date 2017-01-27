@@ -1,7 +1,7 @@
 -rrequirements.txt
 tox==2.5.0
 yamllint==1.6.0
-Sphinx==1.5.1
+Sphinx==1.5.2
 
 # Python 2.6 Support
 astroid==1.4.9; python_version < '2.7'
