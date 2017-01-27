@@ -1,0 +1,23 @@
+---
+- hosts: all
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Debug
+      debug: var=inventory_hostname_short
+
+    - name: upguard node
+      upguard_node:
+        url: "https://upguard.example.com"
+        username: "username"
+        password: "password"
+        validate_certs: false
+        name: "{{ inventory_hostname_short }}"
+        node_type: "RT"
+        state: "present"
+        properties:
+          medium_type: 6
+      register: results
+
+    - debug: var=results
