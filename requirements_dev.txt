@@ -4,7 +4,7 @@ yamllint==1.6.0
 Sphinx==1.5.1
 
 # Python 2.6 Support
-astroid<=1.2.1; python_version < '2.7'
+astroid==1.4.9; python_version < '2.7'
 pylint<1.4; python_version < '2.7'
 flake8<3.0.0; python_version < '2.7'
 
