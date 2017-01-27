@@ -1,6 +1,6 @@
-=========================
-Ansible Upguard Module
-=========================
+======================
+Ansible UpGuard Module
+======================
 
 
 .. image:: https://img.shields.io/travis/napalm255/ansible-upguard.svg
