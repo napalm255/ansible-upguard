@@ -9,7 +9,7 @@ upguard_node - Manage UpGuard Node
 
 .. contents::
    :local:
-   :depth: 2
+   :depth: 1
 
 
 Synopsis
