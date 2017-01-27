@@ -345,8 +345,7 @@ class UpguardNode(object):
 
         return content
 
-
-    def scan(self, label='ansible initiated'):
+    def scan(self, label='ansible initiated', sleep=60):
         """Scan node."""
         node_id = self.node_id
         try:
@@ -362,14 +361,15 @@ class UpguardNode(object):
 
         if 'job_id' not in content:
             self.module.fail_json(msg='failed to create scan job')
-
         job_id = content['job_id']
-        sleep = 60
+
         job = None
         for pause in xrange(sleep):
             job = self.job(job_id)
             status = job['status']
-            if status == -1 or status > 2:
+            if status == 2:
+                break
+            elif status == -1 or status > 2:
                 self.module.fail_json(msg='scan failed')
             elif status < 2:
                 time.sleep(pause)
@@ -398,9 +398,6 @@ def main():
         supports_check_mode=True
     )
 
-    # define empty results object
-    results = {}
-
     # check dependencies
     for requirement in REQUIREMENTS:
         if not requirement:
@@ -419,29 +416,24 @@ def main():
             upguard.results['gather_facts'] = upguard.gather_facts()
             module.exit_json(**upguard.results)
 
-    # handle state
-    if module.params['state'] is not None:
-        # present
-        if 'present' in module.params['state']:
-            with UpguardNode(module) as upguard:
-                upguard.results['changed'] = upguard.present()
-                results.update(upguard.results)
+    # process
+    with UpguardNode(module) as upguard:
+        state = module.params['state']
+        scan = module.params['scan']
         # absent
-        if 'absent' in module.params['state']:
-            with UpguardNode(module) as upguard:
-                upguard.results['changed'] = upguard.absent()
-                results.update(upguard.results)
-
-    # handle scan
-    if module.params['scan']:
-        with UpguardNode(module) as upguard:
+        if 'absent' in state:
+            upguard.results['changed'] = upguard.absent()
+            module.exit_json(**upguard.results)
+        # present
+        if 'present' in state:
+            upguard.results['changed'] = upguard.present()
+        # scan
+        if scan:
             upguard.results['scan'] = upguard.scan()
-            results.update(upguard.results)
+        module.exit_json(**upguard.results)
 
     # if no results, fail
-    if len(results) == 0:
-        results = {'failed': True, 'msg': 'nothing to do'}
-    module.exit_json(**results)
+    module.exit_json({'failed': True, 'msg': 'nothing to do'})
 
 
 if __name__ == '__main__':
