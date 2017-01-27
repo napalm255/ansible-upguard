@@ -20,6 +20,7 @@
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 
 """Ansible Upguard Module."""
+from __future__ import absolute_import, unicode_literals
 
 DOCUMENTATION = '''
 ---
@@ -83,11 +84,38 @@ EXAMPLES = '''
     name: "node_name"
     state: absent
 '''
-# pylint: disable = wrong-import-position
 
 REQUIREMENTS = dict()
 try:
     import time
+    import operator
+    import sys
+    # pylint: disable = redefined-builtin, redefined-variable-type
+    # pylint: disable = invalid-name, undefined-variable
+    if sys.version_info[0] == 2:
+        # Python 2
+        # strings and ints
+        text_type = unicode # noqa
+        string_types = (str, unicode) # noqa
+        integer_types = (int, long) # noqa
+        # lazy iterators
+        range = xrange # noqa
+        from itertools import izip as zip # noqa
+        iteritems = operator.methodcaller('iteritems') # noqa
+        iterkeys = operator.methodcaller('iterkeys') # noqa
+        itervalues = operator.methodcaller('itervalues') # noqa
+    else:
+        # Python 3
+        # strings and ints
+        text_type = str # noqa
+        string_types = (str,) # noqa
+        integer_types = (int,) # noqa
+        # lazy iterators
+        zip = zip # noqa
+        range = range # noqa
+        iteritems = operator.methodcaller('items') # noqa
+        iterkeys = operator.methodcaller('keys') # noqa
+        itervalues = operator.methodcaller('values') # noqa
 except ImportError:
     pass
 
@@ -233,7 +261,7 @@ class UpguardNode(object):
 
         content = self.node
         # match properties
-        for key, value in properties.iteritems():
+        for key, value in iteritems(properties):
             if key in content and value != content[key]:
                 node_matches = False
 
@@ -364,7 +392,7 @@ class UpguardNode(object):
         job_id = content['job_id']
 
         job = None
-        for pause in xrange(sleep):
+        for pause in range(sleep):
             job = self.job(job_id)
             status = job['status']
             if status == 2:
@@ -379,8 +407,6 @@ class UpguardNode(object):
 
 def main():
     """Main."""
-    # pylint: disable = too-many-branches
-    # pylint: disable = fixme
     module = AnsibleModule(
         argument_spec=dict(
             url=dict(type='str', required=True),
@@ -433,7 +459,7 @@ def main():
         module.exit_json(**upguard.results)
 
     # if no results, fail
-    module.exit_json({'failed': True, 'msg': 'nothing to do'})
+    module.exit_json(**{'failed': True, 'msg': 'nothing to do'})
 
 
 if __name__ == '__main__':
