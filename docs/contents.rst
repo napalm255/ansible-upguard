@@ -1,7 +1,10 @@
-Table of Contents
-=================
+.. include:: ../README.rst
+
+Modules
+-------
 
 .. toctree::
    :maxdepth: 2
 
-   ../README
+   upguard_node
+
