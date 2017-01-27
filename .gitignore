@@ -1,0 +1,14 @@
+*.swp
+*.pyc
+*.retry
+*.log
+dev.yml
+dist/*
+build/*
+_build/*
+.tox/*
+.vagrant/*
+.ansible/*
+.cache/*
+.pylint.d/*
+*.egg*
