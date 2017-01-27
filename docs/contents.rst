@@ -1,0 +1,2 @@
+.. toctree::
+   ../README.rst
