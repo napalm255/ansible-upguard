@@ -87,6 +87,11 @@ EXAMPLES = '''
 
 REQUIREMENTS = dict()
 try:
+    import time
+except ImportError:
+    pass
+
+try:
     from ansible.module_utils.basic import AnsibleModule  # noqa
     REQUIREMENTS['ansible'] = True
 except ImportError:
@@ -186,6 +191,21 @@ class UpguardNode(object):
         return node_id
 
     @property
+    def node(self):
+        """Return node."""
+        node_id = self.node_id
+        content = {}
+        if node_id is not None:
+            try:
+                response = self._connect('/nodes/%s.json' % (node_id))
+            except requests.exceptions.HTTPError as ex:
+                self.module.fail_json(msg=str(ex))
+            if response.content:
+                content = json.loads(response.content)
+        self.results['node'] = content
+        return self.results['node']
+
+    @property
     def exists(self):
         """Node exists."""
         node_exists = True
@@ -206,26 +226,16 @@ class UpguardNode(object):
     def matches(self):
         """Match node to properties."""
         node_matches = True
-        node_id = self.node_id
         # define properties to match
         properties = {'name': self.arg.name,
                       'node_type': self.arg.node_type}
         properties.update(self.arg.properties)
 
-        if node_id is not None:
-            try:
-                response = self._connect('/nodes/%s.json' % (node_id))
-            except requests.exceptions.HTTPError as ex:
-                self.module.fail_json(msg=str(ex))
-            content = {}
-            if response.content:
-                content = json.loads(response.content)
-
-            # match properties
-            for key, value in properties.iteritems():
-                if key in content and value != content[key]:
-                    node_matches = False
-            self.results['node'] = content
+        content = self.node
+        # match properties
+        for key, value in properties.iteritems():
+            if key in content and value != content[key]:
+                node_matches = False
 
         self.results['node_matches'] = node_matches
         return self.results['node_matches']
@@ -271,6 +281,19 @@ class UpguardNode(object):
 
     def delete(self):
         """Delete node."""
+        deleted = False
+        node_id = self.node_id
+        try:
+            url = '/nodes/%s.json' % (node_id)
+            response = self._connect(url, method='delete')
+            response.raise_for_status()
+            if response.status_code == 204:
+                deleted = True
+        except requests.exceptions.HTTPError as ex:
+            self.module.fail_json(msg=str(ex))
+
+        self.results['deleted'] = deleted
+        return self.results['deleted']
 
     def present(self):
         """Set state to present."""
@@ -290,7 +313,68 @@ class UpguardNode(object):
 
     def absent(self):
         """Set state to absent."""
-        return self
+        node_changed = False
+        # delete
+        if self.exists:
+            self.results['deleted'] = self.delete()
+            node_changed = True
+        # validate
+        if self.exists:
+            self.module.fail_json(msg="error validating state is absent")
+        return node_changed
+
+    def gather_facts(self):
+        """Gather facts."""
+        facts = False
+        if self.exists:
+            facts = bool(self.node)
+        return facts
+
+    def job(self, job_id):
+        """Return job."""
+        try:
+            url = '/jobs/%s.json' % (job_id)
+            response = self._connect(url)
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as ex:
+            self.module.fail_json(msg=str(ex))
+
+        content = {}
+        if response.content:
+            content = json.loads(response.content)
+
+        return content
+
+
+    def scan(self, label='ansible initiated'):
+        """Scan node."""
+        node_id = self.node_id
+        try:
+            url = '/nodes/%s/start_scan.json?label=%s' % (node_id, label)
+            response = self._connect(url, method='post')
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as ex:
+            self.module.fail_json(msg=str(ex))
+
+        content = {}
+        if response.content:
+            content = json.loads(response.content)
+
+        if 'job_id' not in content:
+            self.module.fail_json(msg='failed to create scan job')
+
+        job_id = content['job_id']
+        sleep = 60
+        job = None
+        for pause in xrange(sleep):
+            job = self.job(job_id)
+            status = job['status']
+            if status == -1 or status > 2:
+                self.module.fail_json(msg='scan failed')
+            elif status < 2:
+                time.sleep(pause)
+
+        return job
 
 
 def main():
@@ -306,15 +390,16 @@ def main():
             gather_facts=dict(type='bool', default=False),
             name=dict(type='str', required=True),
             node_type=dict(type='str', default='Server', required=False),
-            state=dict(type='str', default='present', required=False),
+            state=dict(type='str', default=None, required=False),
             properties=dict(type='dict', default=None, required=False),
+            scan=dict(type='bool', default=False),
             validate_certs=dict(type='bool', default=True),
         ),
         supports_check_mode=True
     )
 
-    # set default results to failed
-    results = {'failed': True, 'msg': 'something went wrong'}
+    # define empty results object
+    results = {}
 
     # check dependencies
     for requirement in REQUIREMENTS:
@@ -322,34 +407,41 @@ def main():
             module.fail_json(msg='%s not installed.' % (requirement))
 
     # check mode
-    # if module.check_mode:
-    #     with UpguardNode(module) as upguard:
-    #         module.exit_json(**{'test': str(dir(upguard))})
-    #         if not upguard.check():
-    #             upguard.results['changed'] = True
-    #         module.exit_json(**upguard.results)
+    if module.check_mode:
+        with UpguardNode(module) as upguard:
+            if not upguard.exists or not upguard.matches:
+                upguard.results['changed'] = True
+            module.exit_json(**upguard.results)
 
     # gather facts
-    # if module.params['gather_facts']:
-    #     name = None
-    #     if 'name' in module.params:
-    #         name = module.params['name']
-    #     with UpguardNode(module) as upguard:
-    #         module.exit_json(**upguard.gather_facts(name))
-
-    # present
-    if 'present' in module.params['state']:
+    if module.params['gather_facts']:
         with UpguardNode(module) as upguard:
-            upguard.results['changed'] = upguard.present()
+            upguard.results['gather_facts'] = upguard.gather_facts()
             module.exit_json(**upguard.results)
 
-    # absent
-    if module.params['state'] is 'absent':
-        with UpguardNode(module) as upguard:
-            upguard.results['changed'] = upguard.absent()
-            module.exit_json(**upguard.results)
+    # handle state
+    if module.params['state'] is not None:
+        # present
+        if 'present' in module.params['state']:
+            with UpguardNode(module) as upguard:
+                upguard.results['changed'] = upguard.present()
+                results.update(upguard.results)
+        # absent
+        if 'absent' in module.params['state']:
+            with UpguardNode(module) as upguard:
+                upguard.results['changed'] = upguard.absent()
+                results.update(upguard.results)
 
-    module.fail_json(**results)
+    # handle scan
+    if module.params['scan']:
+        with UpguardNode(module) as upguard:
+            upguard.results['scan'] = upguard.scan()
+            results.update(upguard.results)
+
+    # if no results, fail
+    if len(results) == 0:
+        results = {'failed': True, 'msg': 'nothing to do'}
+    module.exit_json(**results)
 
 
 if __name__ == '__main__':
