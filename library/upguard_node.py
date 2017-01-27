@@ -101,13 +101,14 @@ options:
 '''
 
 EXAMPLES = '''
-# create node
+# create/update node
 - upguard_node:
     url: "https://upguard.example.com"
     username: "upguard_user"
     password: "upguard_pass"
     name: "node_name"
-    state: present
+    node_type: "SV"
+    state: "present"
 
 # delete node
 - upguard_node:
@@ -115,7 +116,38 @@ EXAMPLES = '''
     username: "upguard_user"
     password: "upguard_pass"
     name: "node_name"
-    state: absent
+    node_type: "SV"
+    state: "absent"
+
+# create/update and scan node
+- upguard_node:
+    url: "https://upguard.example.com"
+    username: "upguard_user"
+    password: "upguard_pass"
+    name: "node_name"
+    node_type: "SV"
+    state: "present"
+    scan: true
+
+# scan node
+- upguard_node:
+    url: "https://upguard.example.com"
+    username: "upguard_user"
+    password: "upguard_pass"
+    name: "node_name"
+    node_type: "SV"
+    scan: true
+
+# gather facts
+- upguard_node:
+    url: "https://upguard.example.com"
+    username: "upguard_user"
+    password: "upguard_pass"
+    name: "node_name"
+    node_type: "SV"
+    gather_facts: true
+  register: results
+
 '''
 
 REQUIREMENTS = dict()
