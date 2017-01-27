@@ -68,7 +68,7 @@ Options
     <td>no</td>
     <td></td>
         <td><ul><li>dict</li></ul></td>
-        <td><div>Properties of the node. See https://support.upguard.com/upguard/nodes-api-v2.html#create.</div></td></tr>
+        <td><div>Properties of the node.</div><div>See https://support.upguard.com/upguard/nodes-api-v2.html#create.</div></td></tr>
             <tr>
     <td>scan<br/><div style="font-size: small;"></div></td>
     <td>no</td>
@@ -86,7 +86,7 @@ Options
     <td>yes</td>
     <td></td>
         <td><ul></ul></td>
-        <td><div>The url of the Upguard Management Console. i.e.  https://upguard.example.com</div></td></tr>
+        <td><div>The url of the Upguard Management Console.</div><div>i.e.  https://upguard.example.com</div></td></tr>
             <tr>
     <td>username<br/><div style="font-size: small;"></div></td>
     <td>yes</td>
@@ -98,7 +98,7 @@ Options
     <td>no</td>
     <td>True</td>
         <td><ul><li>True</li><li>False</li></ul></td>
-        <td><div>Allows connection when SSL certificates are not valid. Set to false when certificates are not trusted.</div></td></tr>
+        <td><div>Allows connection when SSL certificates are not valid.</div><div>Set to false when certificates are not trusted.</div></td></tr>
         </table>
     </br>
 
