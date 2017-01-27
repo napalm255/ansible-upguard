@@ -55,17 +55,17 @@ options:
     node_type:
         required: true
         choices:
-            - SV
-            - DT
-            - SW
-            - FW
-            - RT
-            - PH
-            - RB
-            - SS
-            - WS
+            - "SV: Server"
+            - "DT: Desktop"
+            - "SW: Network Switch"
+            - "FW: Firewall"
+            - "RT: Router"
+            - "PH: Smart Phone"
+            - "RB: Robot"
+            - "SS: SAN Storage"
+            - "WS: Website"
         description:
-            - The node type.
+            - The node type. Use two letter code.
     gather_facts:
         required: false
         default: false
@@ -443,10 +443,10 @@ def main():
     module = AnsibleModule(
         argument_spec=dict(
             url=dict(type='str', required=True),
-            port=dict(type='int', default=443),
+            port=dict(type='int', default=443, required=False),
             username=dict(type='str', required=True),
             password=dict(type='str', required=True),
-            gather_facts=dict(type='bool', default=False),
+            gather_facts=dict(type='bool', default=False, required=False),
             name=dict(type='str', required=True),
             node_type=dict(type='str', default='Server', required=False),
             state=dict(type='str', default=None, required=False),
