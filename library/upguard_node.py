@@ -54,6 +54,16 @@ options:
             - The name of the node.
     node_type:
         required: true
+        choices:
+            - SV
+            - DT
+            - SW
+            - FW
+            - RT
+            - PH
+            - RB
+            - SS
+            - WS
         description:
             - The node type.
     gather_facts:
@@ -63,6 +73,9 @@ options:
             - Return list of nodes.
     state:
         required: false
+        choices:
+            - present
+            - absent
         description:
             - Create or delete node.
     properties:
@@ -72,11 +85,17 @@ options:
     scan:
         required: false
         default: false
+        choices:
+            - true
+            - false
         description:
             - Scan node.
     validate_certs:
         required: false
         default: true
+        choices:
+            - true
+            - false
         description:
             - Allows connection when SSL certificates are not valid. Set to false when certificates are not trusted.
 '''

@@ -1,7 +1,7 @@
 .. _upguard_node:
 
 
-upguard_node - Create Upguard Rule
+upguard_node - Manage UpGuard Node
 ++++++++++++++++++++++++++++++++++
 
 .. versionadded:: 2.2
@@ -15,7 +15,7 @@ upguard_node - Create Upguard Rule
 Synopsis
 --------
 
-* Create Upguard Node
+* Manage UpGuard Node
 
 
 
@@ -49,7 +49,7 @@ Options
     <td>node_type<br/><div style="font-size: small;"></div></td>
     <td>yes</td>
     <td></td>
-        <td><ul></ul></td>
+        <td><ul><li>SV</li><li>DT</li><li>SW</li><li>FW</li><li>RT</li><li>PH</li><li>RB</li><li>SS</li><li>WS</li></ul></td>
         <td><div>The node type.</div></td></tr>
             <tr>
     <td>password<br/><div style="font-size: small;"></div></td>
@@ -73,13 +73,13 @@ Options
     <td>scan<br/><div style="font-size: small;"></div></td>
     <td>no</td>
     <td></td>
-        <td><ul></ul></td>
+        <td><ul><li>True</li><li>False</li></ul></td>
         <td><div>Scan node.</div></td></tr>
             <tr>
     <td>state<br/><div style="font-size: small;"></div></td>
     <td>no</td>
     <td></td>
-        <td><ul></ul></td>
+        <td><ul><li>present</li><li>absent</li></ul></td>
         <td><div>Create or delete node.</div></td></tr>
             <tr>
     <td>url<br/><div style="font-size: small;"></div></td>
@@ -97,7 +97,7 @@ Options
     <td>validate_certs<br/><div style="font-size: small;"></div></td>
     <td>no</td>
     <td>True</td>
-        <td><ul></ul></td>
+        <td><ul><li>True</li><li>False</li></ul></td>
         <td><div>Allows connection when SSL certificates are not valid. Set to false when certificates are not trusted.</div></td></tr>
         </table>
     </br>
