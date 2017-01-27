@@ -25,4 +25,7 @@ Ansible Upguard Module
 Features
 --------
 
-* TODO
+* Create Node
+* Update Node
+* Delete Node
+* Scan Node
