@@ -29,7 +29,7 @@ version_added: "2.2"
 short_description: Manage UpGuard Node
 requires: [ requests==2.13.0 ]
 description:
-    - Manage UpGuard Node
+    - Manage UpGuard Nodes. Create, Update, Delete and Scan Nodes with UpGuard.
 options:
     url:
         required: true
@@ -73,7 +73,7 @@ options:
             - true
             - false
         description:
-            - Return list of nodes.
+            - Return node details.
     state:
         required: false
         choices:
