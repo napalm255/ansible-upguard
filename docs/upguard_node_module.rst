@@ -49,8 +49,8 @@ Options
     <td>node_type<br/><div style="font-size: small;"></div></td>
     <td>yes</td>
     <td></td>
-        <td><ul><li>SV</li><li>DT</li><li>SW</li><li>FW</li><li>RT</li><li>PH</li><li>RB</li><li>SS</li><li>WS</li></ul></td>
-        <td><div>The node type.</div></td></tr>
+        <td><ul><li>SV: Server</li><li>DT: Desktop</li><li>SW: Network Switch</li><li>FW: Firewall</li><li>RT: Router</li><li>PH: Smart Phone</li><li>RB: Robot</li><li>SS: SAN Storage</li><li>WS: Website</li></ul></td>
+        <td><div>The node type. Use two letter code.</div></td></tr>
             <tr>
     <td>password<br/><div style="font-size: small;"></div></td>
     <td>yes</td>
