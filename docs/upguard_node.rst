@@ -162,13 +162,13 @@ Examples
 
 
 Status
-~~~~~~
+------
 
 This module is flagged as **preview** which means that it is not guaranteed to have a backwards compatible interface.
 
 
 Support
-~~~~~~~
+-------
 
 This module is community maintained without core committer oversight.
 
