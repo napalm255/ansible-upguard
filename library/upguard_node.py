@@ -95,27 +95,27 @@ try:
     if sys.version_info[0] == 2:
         # Python 2
         # strings and ints
-        text_type = unicode # noqa
-        string_types = (str, unicode) # noqa
-        integer_types = (int, long) # noqa
+        text_type = unicode  # noqa
+        string_types = (str, unicode)  # noqa
+        integer_types = (int, long)  # noqa
         # lazy iterators
         range = xrange # noqa
-        from itertools import izip as zip # noqa
-        iteritems = operator.methodcaller('iteritems') # noqa
-        iterkeys = operator.methodcaller('iterkeys') # noqa
-        itervalues = operator.methodcaller('itervalues') # noqa
+        from itertools import izip as zip  # noqa
+        iteritems = operator.methodcaller('iteritems')  # noqa
+        iterkeys = operator.methodcaller('iterkeys')  # noqa
+        itervalues = operator.methodcaller('itervalues')  # noqa
     else:
         # Python 3
         # strings and ints
-        text_type = str # noqa
-        string_types = (str,) # noqa
-        integer_types = (int,) # noqa
+        text_type = str  # noqa
+        string_types = (str,)  # noqa
+        integer_types = (int,)  # noqa
         # lazy iterators
-        zip = zip # noqa
-        range = range # noqa
-        iteritems = operator.methodcaller('items') # noqa
-        iterkeys = operator.methodcaller('keys') # noqa
-        itervalues = operator.methodcaller('values') # noqa
+        zip = zip  # noqa
+        range = range  # noqa
+        iteritems = operator.methodcaller('items')  # noqa
+        iterkeys = operator.methodcaller('keys')  # noqa
+        itervalues = operator.methodcaller('values')  # noqa
 except ImportError:
     pass
 
