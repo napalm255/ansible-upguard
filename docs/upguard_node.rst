@@ -15,7 +15,7 @@ upguard_node - Manage UpGuard Node
 Synopsis
 --------
 
-* Manage UpGuard Node
+* Manage UpGuard Nodes. Create, Update, Delete and Scan Nodes with UpGuard.
 
 
 
@@ -38,7 +38,7 @@ Options
     <td>no</td>
     <td></td>
         <td><ul><li>True</li><li>False</li></ul></td>
-        <td><div>Return list of nodes.</div></td></tr>
+        <td><div>Return node details.</div></td></tr>
             <tr>
     <td>name<br/><div style="font-size: small;"></div></td>
     <td>yes</td>
