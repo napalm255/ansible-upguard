@@ -27,14 +27,15 @@ module: upguard_node
 author: "Brad Gibson"
 version_added: "2.2"
 short_description: Manage UpGuard Node
-requires: [ requests==2.13.0 ]
+requires: [requests==2.13.0]
 description:
     - Manage UpGuard Nodes. Create, Update, Delete and Scan Nodes with UpGuard.
 options:
     url:
         required: true
         description:
-            - The url of the Upguard Management Console. i.e.  https://upguard.example.com
+            - The url of the Upguard Management Console.
+            - i.e.  https://upguard.example.com
     port:
         required: false
         default: 443
@@ -86,7 +87,8 @@ options:
         choices:
             - dict
         description:
-            - Properties of the node. See https://support.upguard.com/upguard/nodes-api-v2.html#create.
+            - Properties of the node.
+            - See https://support.upguard.com/upguard/nodes-api-v2.html#create.
     scan:
         required: false
         default: false
@@ -102,7 +104,8 @@ options:
             - true
             - false
         description:
-            - Allows connection when SSL certificates are not valid. Set to false when certificates are not trusted.
+            - Allows connection when SSL certificates are not valid.
+            - Set to false when certificates are not trusted.
 '''
 
 EXAMPLES = '''
