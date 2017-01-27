@@ -69,6 +69,9 @@ options:
     gather_facts:
         required: false
         default: false
+        choices:
+            - true
+            - false
         description:
             - Return list of nodes.
     state:
@@ -80,8 +83,10 @@ options:
             - Create or delete node.
     properties:
         required: false
+        choices:
+            - dict
         description:
-            - Properties of the node.
+            - Properties of the node. See https://support.upguard.com/upguard/nodes-api-v2.html#create.
     scan:
         required: false
         default: false
