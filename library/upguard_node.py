@@ -160,6 +160,7 @@ try:
     import time
     import operator
     import sys
+    import json
     # pylint: disable = redefined-builtin, redefined-variable-type
     # pylint: disable = invalid-name, undefined-variable
     if sys.version_info[0] == 2:
@@ -200,12 +201,6 @@ try:
     REQUIREMENTS['requests'] = True
 except ImportError:
     REQUIREMENTS['requests'] = False
-
-try:
-    import json
-    REQUIREMENTS['json'] = True
-except ImportError:
-    REQUIREMENTS['json'] = False
 
 
 class UpguardNode(object):
