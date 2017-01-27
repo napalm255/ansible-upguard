@@ -99,7 +99,7 @@ try:
         string_types = (str, unicode)  # noqa
         integer_types = (int, long)  # noqa
         # lazy iterators
-        range = xrange # noqa
+        range = xrange  # noqa
         from itertools import izip as zip  # noqa
         iteritems = operator.methodcaller('iteritems')  # noqa
         iterkeys = operator.methodcaller('iterkeys')  # noqa
