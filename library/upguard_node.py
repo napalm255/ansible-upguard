@@ -483,7 +483,7 @@ def main():
             password=dict(type='str', required=True),
             gather_facts=dict(type='bool', default=False, required=False),
             name=dict(type='str', required=True),
-            node_type=dict(type='str', default='Server', required=False),
+            node_type=dict(type='str', default='SV', required=False),
             state=dict(type='str', default=None, required=False),
             properties=dict(type='dict', default=None, required=False),
             scan=dict(type='bool', default=False),
