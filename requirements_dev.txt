@@ -10,4 +10,4 @@ flake8==2.6.2; python_version < '2.7' # pyup: >=2.6.2,<3.0.0
 
 # Python 2.7+ Support
 pylint==1.6.5; python_version >= '2.7'
-flake8==3.2.1; python_version >= '2.7'
+flake8==3.3.0; python_version >= '2.7'
