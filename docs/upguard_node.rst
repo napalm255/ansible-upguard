@@ -41,7 +41,7 @@ Options
     <td>no</td>
     <td></td>
         <td><ul><li>True</li><li>False</li></ul></td>
-        <td><div>Return node details.</div></td></tr>
+        <td><div>Return node and group details.</div></td></tr>
             <tr>
     <td>groups<br/><div style="font-size: small;"></div></td>
     <td>no</td>
