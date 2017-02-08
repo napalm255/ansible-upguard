@@ -19,6 +19,7 @@ Synopsis
 * CRUD supported.
 * Add node to node group.
 * Create job to scan node.
+* Check mode supported.
 
 
 Requirements (on host that executes module)
