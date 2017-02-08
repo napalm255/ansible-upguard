@@ -201,21 +201,14 @@ Common return values are documented here :doc:`common_return_values`, the follow
         <td> node details </td>
         <td align=center> state==present or gather_facts==true </td>
         <td align=center> dict </td>
-        <td align=center> "node": {
-    "created_at": "2017-01-26T22:37:12.866-05:00",
-    "created_by": 8,
-    "environment_id": 7,
-    "id": 1117
-    }
- </td>
+        <td align=center> {'connect_mode': 'f', 'primary_node_group_id': None, 'environment_id': 7, 'operating_system_id': None, 'discovery_type': None, 'medium_password': None, 'updated_at': '2017-02-08T18:07:19.502-05:00', 'node_type': 'SV', 'id': 1120, 'description': None, 'uuid': '686ddbc5-0f6a-4641-af41-5e99f62fe2ac', 'created_by': 8, 'medium_ssl_privkey': None, 'last_scan_id': None, 'mac_address': None, 'short_description': '', 'medium_group': None, 'medium_info': {}, 'status': 1, 'medium_port': 22, 'updated_by': 8, 'medium_username': None, 'alternate_password': None, 'medium_ssl_cert': None, 'online': False, 'scan_options': None, 'last_vuln_scan_at': None, 'ip_address': None, 'info': None, 'organisation_id': 4, 'medium_type': 3, 'name': 'SOME_NODE_NAME', 'operating_system_family_id': None, 'external_id': None, 'created_at': '2017-02-08T02:16:31.962-05:00', 'medium_connection_fail_count': 0, 'last_scan_status': None, 'public': False, 'url': None, 'connection_manager_group_id': None, 'medium_hostname': None} </td>
     </tr>
             <tr>
         <td> groups </td>
         <td> group details </td>
-        <td align=center> ['state==present or gather_facts==true', 'groups is not None'] </td>
+        <td align=center> groups are defined and either state is present or gather_facts is true </td>
         <td align=center> dict </td>
-        <td align=center> "groups": [{},{}]
- </td>
+        <td align=center> {'102': {'status': 1, 'organisation_id': 4, 'description': None, 'node_rules': None, 'search_query': None, 'created_at': '2017-02-08T00:57:47.817-05:00', 'updated_at': '2017-02-08T00:57:47.817-05:00', 'name': 'SOME_GROUP_NAME', 'diff_notify': False, 'scan_options': '{"scan_directory_options":[]}', 'external_id': None, 'id': 102, 'owner_id': None}} </td>
     </tr>
             <tr>
         <td> scan </td>

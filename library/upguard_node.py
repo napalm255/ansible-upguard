@@ -190,22 +190,71 @@ node:
     description: node details
     returned: state==present or gather_facts==true
     type: dict
-    sample: |
-        "node": {
-            "created_at": "2017-01-26T22:37:12.866-05:00",
-            "created_by": 8,
-            "environment_id": 7,
-            "id": 1117
-            }
+    sample: {
+        "alternate_password": null,
+        "connect_mode": "f",
+        "connection_manager_group_id": null,
+        "created_at": "2017-02-08T02:16:31.962-05:00",
+        "created_by": 8,
+        "description": null,
+        "discovery_type": null,
+        "environment_id": 7,
+        "external_id": null,
+        "id": 1120,
+        "info": null,
+        "ip_address": null,
+        "last_scan_id": null,
+        "last_scan_status": null,
+        "last_vuln_scan_at": null,
+        "mac_address": null,
+        "medium_connection_fail_count": 0,
+        "medium_group": null,
+        "medium_hostname": null,
+        "medium_info": {},
+        "medium_password": null,
+        "medium_port": 22,
+        "medium_ssl_cert": null,
+        "medium_ssl_privkey": null,
+        "medium_type": 3,
+        "medium_username": null,
+        "name": "SOME_NODE_NAME",
+        "node_type": "SV",
+        "online": false,
+        "operating_system_family_id": null,
+        "operating_system_id": null,
+        "organisation_id": 4,
+        "primary_node_group_id": null,
+        "public": false,
+        "scan_options": null,
+        "short_description": "",
+        "status": 1,
+        "updated_at": "2017-02-08T18:07:19.502-05:00",
+        "updated_by": 8,
+        "url": null,
+        "uuid": "686ddbc5-0f6a-4641-af41-5e99f62fe2ac"
+    }
 
 groups:
     description: group details
-    returned:
-        - state==present or gather_facts==true
-        - groups is not None
+    returned: groups are defined and either state is present or gather_facts is true
     type: dict
-    sample: |
-        "groups": [{},{}]
+    sample: {
+        "102": {
+            "created_at": "2017-02-08T00:57:47.817-05:00",
+            "description": null,
+            "diff_notify": false,
+            "external_id": null,
+            "id": 102,
+            "name": "SOME_GROUP_NAME",
+            "node_rules": null,
+            "organisation_id": 4,
+            "owner_id": null,
+            "scan_options": '{\"scan_directory_options\":[]}',
+            "search_query": null,
+            "status": 1,
+            "updated_at": "2017-02-08T00:57:47.817-05:00"
+        }
+    }
 
 scan:
     description: scan job details
