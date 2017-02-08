@@ -15,7 +15,10 @@ upguard_node - Manage UpGuard Node
 Synopsis
 --------
 
-* Manage UpGuard Nodes. Create, Update, Delete and Scan Nodes with UpGuard.
+* Manage UpGuard node.
+* Create, update and delete node.
+* Add node to node groups.
+* Scan node.
 
 
 
@@ -39,6 +42,12 @@ Options
     <td></td>
         <td><ul><li>True</li><li>False</li></ul></td>
         <td><div>Return node details.</div></td></tr>
+            <tr>
+    <td>groups<br/><div style="font-size: small;"></div></td>
+    <td>no</td>
+    <td></td>
+        <td><ul><li>list</li></ul></td>
+        <td><div>List of group ids and/or group names in which to add the node.</div></td></tr>
             <tr>
     <td>name<br/><div style="font-size: small;"></div></td>
     <td>yes</td>
@@ -127,7 +136,7 @@ Examples
         node_type: "SV"
         state: "absent"
     
-    # create/update and scan node
+    # create/update, add to groups and scan node
     - upguard_node:
         url: "https://upguard.example.com"
         username: "upguard_user"
@@ -136,6 +145,9 @@ Examples
         node_type: "SV"
         state: "present"
         scan: true
+        groups:
+          - 100
+          - GroupName
     
     # scan node
     - upguard_node:
