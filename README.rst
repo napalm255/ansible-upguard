@@ -25,8 +25,6 @@ Ansible Upguard Module
 Features
 --------
 
-* Create Node
-* Update Node
-* Delete Node
-* Scan Node
-* Add node to node group
+* CRUD supported.
+* Create job to scan node.
+* Add node to node group.
