@@ -28,3 +28,4 @@ Features
 * CRUD supported.
 * Create job to scan node.
 * Add node to node group.
+* Check mode supported.
