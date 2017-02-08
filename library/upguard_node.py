@@ -258,10 +258,9 @@ groups:
 
 scan:
     description: scan job details
-    returned: scan==true
+    returned: scan is true
     type: dict
-    sample: |
-        "scan": {}
+    sample: {}
 
 '''
 
