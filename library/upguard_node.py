@@ -31,19 +31,18 @@ module: upguard_node
 author: "Brad Gibson (napalm255)"
 version_added: "2.3"
 short_description: Manage UpGuard Node
-requires: [requests==2.13.0]
-description: >
-    This module will manage an UpGuard node.
-    It can create, update and delete a node.
-    Add the node to a node group.
-    Create job to scan the node.
+requirements: [requests==2.13.0]
+description:
+    - Manage UpGuard node.
+    - CRUD supported.
+    - Add node to node group.
+    - Create job to scan node.
 options:
     url:
         required: true
-        description: >
-            The url of the Upguard Management Console.
-            Port is optional.
-            i.e.  https://upguard.example.com[:8443]
+        description:
+            - The url of the Upguard Management Console. Port is optional.
+            - i.e.  https://upguard.example.com[:8443]
     username:
         required: true
         description:
@@ -215,7 +214,7 @@ scan:
 
 '''
 
-REQUIREMENTS = dict()
+REQUIRED_MODULES = dict()
 try:
     import time
     import operator
@@ -252,15 +251,15 @@ except ImportError:
 
 try:
     from ansible.module_utils.basic import AnsibleModule  # noqa
-    REQUIREMENTS['ansible'] = True
+    REQUIRED_MODULES['ansible'] = True
 except ImportError:
-    REQUIREMENTS['ansible'] = False
+    REQUIRED_MODULES['ansible'] = False
 
 try:
     import requests
-    REQUIREMENTS['requests'] = True
+    REQUIRED_MODULES['requests'] = True
 except ImportError:
-    REQUIREMENTS['requests'] = False
+    REQUIRED_MODULES['requests'] = False
 
 
 class UpguardNode(object):
@@ -639,7 +638,7 @@ def main():
     )
 
     # check dependencies
-    for requirement in REQUIREMENTS:
+    for requirement in REQUIRED_MODULES:
         if not requirement:
             module.fail_json(msg='%s not installed.' % (requirement))
 

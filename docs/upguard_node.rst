@@ -15,150 +15,16 @@ upguard_node - Manage UpGuard Node
 Synopsis
 --------
 
-* T
-* h
-* i
-* s
-*  
-* m
-* o
-* d
-* u
-* l
-* e
-*  
-* w
-* i
-* l
-* l
-*  
-* m
-* a
-* n
-* a
-* g
-* e
-*  
-* a
-* n
-*  
-* U
-* p
-* G
-* u
-* a
-* r
-* d
-*  
-* n
-* o
-* d
-* e
-* .
-*  
-* I
-* t
-*  
-* c
-* a
-* n
-*  
-* c
-* r
-* e
-* a
-* t
-* e
-* ,
-*  
-* u
-* p
-* d
-* a
-* t
-* e
-*  
-* a
-* n
-* d
-*  
-* d
-* e
-* l
-* e
-* t
-* e
-*  
-* a
-*  
-* n
-* o
-* d
-* e
-* .
-*  
-* A
-* d
-* d
-*  
-* t
-* h
-* e
-*  
-* n
-* o
-* d
-* e
-*  
-* t
-* o
-*  
-* a
-*  
-* n
-* o
-* d
-* e
-*  
-* g
-* r
-* o
-* u
-* p
-* .
-*  
-* C
-* r
-* e
-* a
-* t
-* e
-*  
-* j
-* o
-* b
-*  
-* t
-* o
-*  
-* s
-* c
-* a
-* n
-*  
-* t
-* h
-* e
-*  
-* n
-* o
-* d
-* e
-* .
-* 
+* Manage UpGuard node.
+* CRUD supported.
+* Add node to node group.
+* Create job to scan node.
 
 
+Requirements (on host that executes module)
+-------------------------------------------
 
+  * requests==2.13.0
 
 
 Options
@@ -239,8 +105,7 @@ Options
     <td>yes</td>
     <td></td>
         <td><ul></ul></td>
-        <td><div>The url of the Upguard Management Console. Port is optional. i.e.  https://upguard.example.com[:8443]
-    </div></td></tr>
+        <td><div>The url of the Upguard Management Console. Port is optional.</div><div>i.e.  https://upguard.example.com[:8443]</div></td></tr>
             <tr>
     <td>username<br/><div style="font-size: small;"></div></td>
     <td>yes</td>
