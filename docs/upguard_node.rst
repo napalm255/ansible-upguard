@@ -4,7 +4,7 @@
 upguard_node - Manage UpGuard Node
 ++++++++++++++++++++++++++++++++++
 
-.. versionadded:: 2.2
+.. versionadded:: 2.3
 
 
 .. contents::
@@ -57,7 +57,7 @@ Options
             <tr>
     <td>node_type<br/><div style="font-size: small;"></div></td>
     <td>yes</td>
-    <td></td>
+    <td>SV</td>
         <td><ul><li>SV: Server</li><li>DT: Desktop</li><li>SW: Network Switch</li><li>FW: Firewall</li><li>RT: Router</li><li>PH: Smart Phone</li><li>RB: Robot</li><li>SS: SAN Storage</li><li>WS: Website</li></ul></td>
         <td><div>The node type. Use two letter code.</div></td></tr>
             <tr>
@@ -77,7 +77,7 @@ Options
     <td>no</td>
     <td></td>
         <td><ul><li>dict</li></ul></td>
-        <td><div>Properties of the node.</div><div>See https://support.upguard.com/upguard/nodes-api-v2.html#create.</div></td></tr>
+        <td><div>Properties of the node.</div><div>See <a href='https://support.upguard.com/upguard/nodes-api-v2.html#create'>https://support.upguard.com/upguard/nodes-api-v2.html#create</a>.</div></td></tr>
             <tr>
     <td>scan<br/><div style="font-size: small;"></div></td>
     <td>no</td>
@@ -87,9 +87,9 @@ Options
             <tr>
     <td>state<br/><div style="font-size: small;"></div></td>
     <td>no</td>
-    <td></td>
+    <td>None</td>
         <td><ul><li>present</li><li>absent</li></ul></td>
-        <td><div>Create or delete node.</div></td></tr>
+        <td><div>Create or delete node.</div><div>Default of <code>None</code> allows for fact gathering only.</div></td></tr>
             <tr>
     <td>url<br/><div style="font-size: small;"></div></td>
     <td>yes</td>
@@ -169,6 +169,38 @@ Examples
       register: results
     
 
+Return Values
+-------------
+
+Common return values are documented here :doc:`common_return_values`, the following are the fields unique to this module:
+
+.. raw:: html
+
+    <table border=1 cellpadding=4>
+    <tr>
+    <th class="head">name</th>
+    <th class="head">description</th>
+    <th class="head">returned</th>
+    <th class="head">type</th>
+    <th class="head">sample</th>
+    </tr>
+
+        <tr>
+        <td> node </td>
+        <td> node details </td>
+        <td align=center> present </td>
+        <td align=center> dict </td>
+        <td align=center> "node": {
+    "created_at": "2017-01-26T22:37:12.866-05:00",
+    "created_by": 8,
+    "environment_id": 7,
+    "id": 1117
+    }
+ </td>
+    </tr>
+        
+    </table>
+    </br></br>
 
 
 
