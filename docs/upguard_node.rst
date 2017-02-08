@@ -15,10 +15,148 @@ upguard_node - Manage UpGuard Node
 Synopsis
 --------
 
-* Manage UpGuard node.
-* Create, update and delete node.
-* Add node to node groups.
-* Scan node.
+* T
+* h
+* i
+* s
+*  
+* m
+* o
+* d
+* u
+* l
+* e
+*  
+* w
+* i
+* l
+* l
+*  
+* m
+* a
+* n
+* a
+* g
+* e
+*  
+* a
+* n
+*  
+* U
+* p
+* G
+* u
+* a
+* r
+* d
+*  
+* n
+* o
+* d
+* e
+* .
+*  
+* I
+* t
+*  
+* c
+* a
+* n
+*  
+* c
+* r
+* e
+* a
+* t
+* e
+* ,
+*  
+* u
+* p
+* d
+* a
+* t
+* e
+*  
+* a
+* n
+* d
+*  
+* d
+* e
+* l
+* e
+* t
+* e
+*  
+* a
+*  
+* n
+* o
+* d
+* e
+* .
+*  
+* A
+* d
+* d
+*  
+* t
+* h
+* e
+*  
+* n
+* o
+* d
+* e
+*  
+* t
+* o
+*  
+* a
+*  
+* n
+* o
+* d
+* e
+*  
+* g
+* r
+* o
+* u
+* p
+* .
+*  
+* C
+* r
+* e
+* a
+* t
+* e
+*  
+* j
+* o
+* b
+*  
+* t
+* o
+*  
+* s
+* c
+* a
+* n
+*  
+* t
+* h
+* e
+*  
+* n
+* o
+* d
+* e
+* .
+* 
+
 
 
 
@@ -67,12 +205,6 @@ Options
         <td><ul></ul></td>
         <td><div>The password of the Upguard Management Console.</div></td></tr>
             <tr>
-    <td>port<br/><div style="font-size: small;"></div></td>
-    <td>no</td>
-    <td>443</td>
-        <td><ul></ul></td>
-        <td><div>The port to connect to Upguard Management Console.</div></td></tr>
-            <tr>
     <td>properties<br/><div style="font-size: small;"></div></td>
     <td>no</td>
     <td></td>
@@ -83,19 +215,32 @@ Options
     <td>no</td>
     <td></td>
         <td><ul><li>True</li><li>False</li></ul></td>
-        <td><div>Scan node.</div></td></tr>
+        <td><div>Create a job to scan the node.</div></td></tr>
+            <tr>
+    <td>scan_label<br/><div style="font-size: small;"></div></td>
+    <td>no</td>
+    <td>ansible initiated</td>
+        <td><ul></ul></td>
+        <td><div>Assign a label to the scan job.</div></td></tr>
+            <tr>
+    <td>scan_timeout<br/><div style="font-size: small;"></div></td>
+    <td>no</td>
+    <td>120</td>
+        <td><ul></ul></td>
+        <td><div>Timeout in seconds to wait for the scan job.</div><div>The task will fail if the timeout is reached.</div></td></tr>
             <tr>
     <td>state<br/><div style="font-size: small;"></div></td>
     <td>no</td>
-    <td>None</td>
+    <td></td>
         <td><ul><li>present</li><li>absent</li></ul></td>
-        <td><div>Create or delete node.</div><div>Default of <code>None</code> allows for fact gathering only.</div></td></tr>
+        <td><div>Create or delete node.</div><div>When state is set to <code>present</code> facts will be gathered.</div></td></tr>
             <tr>
     <td>url<br/><div style="font-size: small;"></div></td>
     <td>yes</td>
     <td></td>
         <td><ul></ul></td>
-        <td><div>The url of the Upguard Management Console.</div><div>i.e.  https://upguard.example.com</div></td></tr>
+        <td><div>The url of the Upguard Management Console. Port is optional. i.e.  https://upguard.example.com[:8443]
+    </div></td></tr>
             <tr>
     <td>username<br/><div style="font-size: small;"></div></td>
     <td>yes</td>
