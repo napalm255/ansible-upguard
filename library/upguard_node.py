@@ -31,7 +31,8 @@ module: upguard_node
 author: "Brad Gibson (napalm255)"
 version_added: "2.3"
 short_description: Manage UpGuard Node
-requirements: [requests==2.13.0]
+requirements:
+    - requests
 description:
     - Manage UpGuard node.
     - CRUD supported.

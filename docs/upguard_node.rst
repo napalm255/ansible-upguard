@@ -24,7 +24,7 @@ Synopsis
 Requirements (on host that executes module)
 -------------------------------------------
 
-  * requests==2.13.0
+  * requests
 
 
 Options
