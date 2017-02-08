@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 # (c) 2016, Brad Gibson <napalm255@gmail.com>
@@ -24,8 +24,8 @@ from __future__ import absolute_import, unicode_literals
 DOCUMENTATION = '''
 ---
 module: upguard_node
-author: "Brad Gibson"
-version_added: "2.2"
+author: "Brad Gibson (napalm255)"
+version_added: "2.3"
 short_description: Manage UpGuard Node
 requires: [requests==2.13.0]
 description:
@@ -58,6 +58,7 @@ options:
             - The name of the node.
     node_type:
         required: true
+        default: SV
         choices:
             - "SV: Server"
             - "DT: Desktop"
@@ -80,18 +81,20 @@ options:
             - Return node and group details.
     state:
         required: false
+        default: None
         choices:
             - present
             - absent
         description:
             - Create or delete node.
+            - Default of C(None) allows for fact gathering only.
     properties:
         required: false
         choices:
             - dict
         description:
             - Properties of the node.
-            - See https://support.upguard.com/upguard/nodes-api-v2.html#create.
+            - See U(https://support.upguard.com/upguard/nodes-api-v2.html#create).
     groups:
         required: false
         choices:
@@ -170,6 +173,22 @@ EXAMPLES = '''
 
 '''
 
+RETURN = '''
+---
+node:
+    description: node details
+    returned: present
+    type: dict
+    sample: |
+        "node": {
+            "created_at": "2017-01-26T22:37:12.866-05:00",
+            "created_by": 8,
+            "environment_id": 7,
+            "id": 1117
+            }
+
+'''
+
 REQUIREMENTS = dict()
 try:
     import time
@@ -230,15 +249,11 @@ class UpguardNode(object):
             setattr(self.arg, arg, self.module.params[arg])
         # set defaults
         self.arg.name = self.arg.name.upper()
-        # redact password for security
-        if 'password' in module.params:
-            module.params['password'] = 'REDACTED'
         # strip trailing slash and append api version
         self.arg.url = self.arg.url.rstrip('/') + '/api/v2'
         # define default results
         self.results = {'changed': False,
-                        'failed': False,
-                        'args': module.params}
+                        'failed': False}
         # define medium types mapping
         self.medium_types = {'AGENT': 1, 'SSH': 3, 'TELNET': 5, 'HTTPS': 6,
                              'WINRM': 7, 'SERVICE': 8, 'WEB': 9}
@@ -343,18 +358,17 @@ class UpguardNode(object):
 
     @property
     def node(self):
-        """Return node."""
+        """Return node details."""
         node_id = self.node_id
-        content = {}
+        details = {}
         if node_id is not None:
             try:
                 response = self._connect('/nodes/%s.json' % (node_id))
             except requests.exceptions.HTTPError as ex:
                 self.module.fail_json(msg=str(ex))
             if response.content:
-                content = json.loads(response.content)
-        self.results['node'] = content
-        return self.results['node']
+                details = json.loads(response.content)
+        return details
 
     @property
     def exists(self):
@@ -370,7 +384,6 @@ class UpguardNode(object):
                 node_exists = False
             else:
                 self.module.fail_json(msg=str(ex))
-        self.results['node_exists'] = node_exists
         return node_exists
 
     @property
@@ -382,10 +395,10 @@ class UpguardNode(object):
                       'node_type': self.arg.node_type}
         properties.update(self.arg.properties)
 
-        content = self.node
+        node_details = self.node
         # match properties
         for key, value in iteritems(properties):
-            if key in content and value != content[key]:
+            if key in node_details and value != node_details[key]:
                 node_matches = False
 
         # match groups
@@ -402,8 +415,7 @@ class UpguardNode(object):
                 if not group_matches:
                     node_matches = False
 
-        self.results['node_matches'] = node_matches
-        return self.results['node_matches']
+        return node_matches
 
     def create(self):
         """Create node."""
@@ -419,11 +431,11 @@ class UpguardNode(object):
         except requests.exceptions.HTTPError as ex:
             self.module.fail_json(msg=str(ex))
 
-        content = {}
+        results = {}
         if response.content:
-            content = json.loads(response.content)
+            results = json.loads(response.content)
 
-        return content
+        return results
 
     def update(self):
         """Update node."""
@@ -442,8 +454,7 @@ class UpguardNode(object):
         except requests.exceptions.HTTPError as ex:
             self.module.fail_json(msg=str(ex))
 
-        self.results['updated'] = updated
-        return self.results['updated']
+        return updated
 
     def delete(self):
         """Delete node."""
@@ -458,15 +469,14 @@ class UpguardNode(object):
         except requests.exceptions.HTTPError as ex:
             self.module.fail_json(msg=str(ex))
 
-        self.results['deleted'] = deleted
-        return self.results['deleted']
+        return deleted
 
     def present(self):
         """Set state to present."""
         node_changed = False
         # create
         if not self.exists:
-            self.results['created'] = self.create()
+            self.create()
             node_changed = True
         # update
         elif self.exists and not self.matches:
@@ -481,7 +491,9 @@ class UpguardNode(object):
                 self.add_to_group(group_id)
         # validate
         if not self.exists or not self.matches:
-            self.module.fail_json(msg="error validating state is present")
+            self.module.fail_json(msg="error validating state is present.")
+        # gather facts
+        self.gather_facts()
         return node_changed
 
     def absent(self):
@@ -493,7 +505,7 @@ class UpguardNode(object):
             node_changed = True
         # validate
         if self.exists:
-            self.module.fail_json(msg="error validating state is absent")
+            self.module.fail_json(msg="error validating state is absent.")
         return node_changed
 
     def add_to_group(self, group_id):
@@ -516,9 +528,10 @@ class UpguardNode(object):
         """Gather facts."""
         facts = False
         if self.exists:
-            facts = bool(self.node)
+            facts = True
+            self.results['node'] = self.node
         if self.arg.groups is not None:
-            facts = bool(self.arg.groups)
+            facts = True
             self.results['groups'] = dict()
             for group in self.arg.groups:
                 group_id = group
@@ -542,7 +555,7 @@ class UpguardNode(object):
 
         return content
 
-    def scan(self, label='ansible initiated', sleep=60):
+    def scan(self, label='ansible initiated', sleep=120):
         """Scan node."""
         node_id = self.node_id
         try:
@@ -557,7 +570,7 @@ class UpguardNode(object):
             content = json.loads(response.content)
 
         if 'job_id' not in content:
-            self.module.fail_json(msg='failed to create scan job')
+            self.module.fail_json(msg='failed to create scan job.')
         job_id = content['job_id']
 
         job = None
@@ -567,7 +580,7 @@ class UpguardNode(object):
             if status == 2:
                 break
             elif status == -1 or status > 2:
-                self.module.fail_json(msg='scan failed')
+                self.module.fail_json(msg='scan failed or timed out waiting.')
             elif status < 2:
                 time.sleep(pause)
 
@@ -579,15 +592,15 @@ def main():
     module = AnsibleModule(
         argument_spec=dict(
             url=dict(type='str', required=True),
-            port=dict(type='int', default=443, required=False),
+            port=dict(type='int', default=443),
             username=dict(type='str', required=True),
-            password=dict(type='str', required=True),
-            gather_facts=dict(type='bool', default=False, required=False),
+            password=dict(type='str', required=True, no_log=True),
+            gather_facts=dict(type='bool', default=False),
             name=dict(type='str', required=True),
-            node_type=dict(type='str', default='SV', required=False),
-            state=dict(type='str', default=None, required=False),
-            properties=dict(type='dict', default=None, required=False),
-            groups=dict(type='list', default=None, required=False),
+            node_type=dict(type='str', default='SV'),
+            state=dict(type='str', default=None),
+            properties=dict(type='dict', default=None),
+            groups=dict(type='list', default=None),
             scan=dict(type='bool', default=False),
             validate_certs=dict(type='bool', default=True),
         ),
