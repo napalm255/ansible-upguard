@@ -213,10 +213,9 @@ Common return values are documented here :doc:`common_return_values`, the follow
             <tr>
         <td> scan </td>
         <td> scan job details </td>
-        <td align=center> scan==true </td>
+        <td align=center> scan is true </td>
         <td align=center> dict </td>
-        <td align=center> "scan": {}
- </td>
+        <td align=center> {} </td>
     </tr>
         
     </table>
