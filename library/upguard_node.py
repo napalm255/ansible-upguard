@@ -77,7 +77,7 @@ options:
             - true
             - false
         description:
-            - Return node details.
+            - Return node and group details.
     state:
         required: false
         choices:
