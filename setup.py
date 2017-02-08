@@ -9,7 +9,7 @@ with open('requirements.txt') as requirements_file:
 
 setup(
     name='ansible-upguard',
-    version='0.1.0',
+    version='1.0.0',
     description="Ansible Upguard Module",
     long_description="Ansible Upguard Module",
     author="Brad Gibson",
