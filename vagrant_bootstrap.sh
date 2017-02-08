@@ -30,7 +30,7 @@ updatedb
 
 # Output installed python packages
 echo "Installed Python Packages:"
-pip freeze
+pip list
 
 # End bootstrap
 echo "Bootstrap Complete!"
