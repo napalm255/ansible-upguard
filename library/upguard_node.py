@@ -188,7 +188,7 @@ RETURN = '''
 ---
 node:
     description: node details
-    returned: state==present or gather_facts==true
+    returned: either state is present or gather_facts is true
     type: dict
     sample: {
         "alternate_password": null,
