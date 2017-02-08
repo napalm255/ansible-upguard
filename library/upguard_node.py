@@ -187,7 +187,7 @@ RETURN = '''
 ---
 node:
     description: node details
-    returned: present
+    returned: state==present or gather_facts==true
     type: dict
     sample: |
         "node": {
@@ -196,6 +196,22 @@ node:
             "environment_id": 7,
             "id": 1117
             }
+
+groups:
+    description: group details
+    returned:
+        - state==present or gather_facts==true
+        - groups is not None
+    type: dict
+    sample: |
+        "groups": [{},{}]
+
+scan:
+    description: scan job details
+    returned: scan==true
+    type: dict
+    sample: |
+        "scan": {}
 
 '''
 
