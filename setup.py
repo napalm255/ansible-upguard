@@ -5,7 +5,7 @@
 from setuptools import setup
 
 with open('requirements.txt') as requirements_file:
-    requirements = list(requirements_file.readlines())
+    REQUIREMENTS = list(requirements_file.readlines())
 
 setup(
     name='ansible-upguard',
@@ -16,7 +16,7 @@ setup(
     author_email='napalm255@gmail.com',
     url='https://github.com/napalm255/ansible-upguard',
     package_dir={'': 'library'},
-    install_requires=requirements,
+    install_requires=REQUIREMENTS,
     license="BSD license",
     zip_safe=False,
     keywords='ansible-upguard',
