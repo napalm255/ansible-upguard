@@ -29,3 +29,4 @@ Features
 * Update Node
 * Delete Node
 * Scan Node
+* Add node to node group
