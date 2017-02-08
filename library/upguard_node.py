@@ -28,22 +28,18 @@ author: "Brad Gibson (napalm255)"
 version_added: "2.3"
 short_description: Manage UpGuard Node
 requires: [requests==2.13.0]
-description:
-    - Manage UpGuard node.
-    - Create, update and delete node.
-    - Add node to node groups.
-    - Scan node.
+description: >
+    This module will manage an UpGuard node.
+    It can create, update and delete a node.
+    Add the node to a node group.
+    Create job to scan the node.
 options:
     url:
         required: true
-        description:
-            - The url of the Upguard Management Console.
-            - i.e.  https://upguard.example.com
-    port:
-        required: false
-        default: 443
-        description:
-            - The port to connect to Upguard Management Console.
+        description: >
+            The url of the Upguard Management Console.
+            Port is optional.
+            i.e.  https://upguard.example.com[:8443]
     username:
         required: true
         description:
@@ -81,13 +77,12 @@ options:
             - Return node and group details.
     state:
         required: false
-        default: None
         choices:
             - present
             - absent
         description:
             - Create or delete node.
-            - Default of C(None) allows for fact gathering only.
+            - When state is set to C(present) facts will be gathered.
     properties:
         required: false
         choices:
@@ -108,7 +103,18 @@ options:
             - true
             - false
         description:
-            - Scan node.
+            - Create a job to scan the node.
+    scan_label:
+        required: false
+        default: ansible initiated
+        description:
+            - Assign a label to the scan job.
+    scan_timeout:
+        required: false
+        default: 120
+        description:
+            - Timeout in seconds to wait for the scan job.
+            - The task will fail if the timeout is reached.
     validate_certs:
         required: false
         default: true
@@ -269,11 +275,11 @@ class UpguardNode(object):
                              88: 'ERROR', 99: 'EXCEPTION'}
 
     def __enter__(self):
-        """Initiate connection."""
+        """Enter."""
         return self
 
     def __exit__(self, type, value, traceback):
-        """Disconnect."""
+        """Exit."""
         # pylint: disable=redefined-builtin
         return
 
@@ -286,73 +292,85 @@ class UpguardNode(object):
         auth = (self.arg.username, self.arg.password)
         verify = bool(self.arg.validate_certs)
         try:
-            response = req(url, headers=headers, auth=auth, json=data,
-                           verify=verify)
+            response = req(url, headers=headers, auth=auth,
+                           json=data, verify=verify)
         except requests.exceptions.RequestException as ex:
-            self.module.fail_json(msg=str(ex))
+            self.module.fail_json(msg='failed to connect',
+                                  error=str(ex))
 
         return response
 
     def group_details(self, group_id):
         """Return group details."""
-        content = {}
-        url = "/node_groups/%s.json" % (group_id)
-        try:
-            response = self._connect(url)
-        except requests.exceptions.HTTPError as ex:
-            self.module.fail_json(msg=str(ex))
-        if response.content:
-            content = json.loads(response.content)
-        return content
-
-    def group_nodes(self, group_id):
-        """Return group nodes."""
-        content = {}
-        url = "/node_groups/%s/nodes.json" % (group_id)
-        try:
-            response = self._connect(url)
-        except requests.exceptions.HTTPError as ex:
-            self.module.fail_json(msg=str(ex))
-        if response.content:
-            content = json.loads(response.content)
-        return content
-
-    def group_id(self, group_name):
-        """Return group id."""
-        url = '/node_groups/lookup.json?name=' + str(group_name)
+        details = {}
+        url = '/node_groups/{}.json'.format(group_id)
         try:
             response = self._connect(url)
             response.raise_for_status()
         except requests.exceptions.HTTPError as ex:
-            self.module.fail_json(msg=str(ex))
-
-        content = {}
+            self.module.fail_json(msg='failed querying node group details',
+                                  error=str(ex))
         if response.content:
-            content = json.loads(response.content)
+            details = json.loads(response.content)
 
-        group_id = None
-        if 'node_group_id' in content:
-            group_id = int(content['node_group_id'])
+        return details
+
+    def group_nodes(self, group_id):
+        """Return group nodes."""
+        url = '/node_groups/{}/nodes.json'.format(group_id)
+        try:
+            response = self._connect(url)
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as ex:
+            self.module.fail_json(msg='failed querying node group nodes',
+                                  error=str(ex))
+
+        nodes = json.loads(response.content)
+
+        return nodes
+
+    def group_id(self, group_name):
+        """Return group id."""
+        url = '/node_groups/lookup.json?name={}'.format(group_name)
+        try:
+            response = self._connect(url)
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as ex:
+            self.module.fail_json(msg='group does not exist',
+                                  error=str(ex))
+
+        group_id = int(json.loads(response.content)['node_group_id'])
 
         return group_id
+
+    def group_add_node(self, group_id):
+        """Add node to group."""
+        added = False
+        url = '/node_groups/{}/add_nodes.json?node_ids[]={}'.format(
+            group_id, self.node_id)
+        try:
+            response = self._connect(url, method='post')
+            response.raise_for_status()
+            if response.status_code == 201:
+                added = True
+        except requests.exceptions.HTTPError as ex:
+            self.module.fail_json(msg='failed adding node to group',
+                                  error=str(ex))
+
+        return added
 
     @property
     def node_id(self):
         """Return node id."""
-        url = '/nodes/lookup.json?name=' + str(self.arg.name)
+        url = '/nodes/lookup.json?name={}'.format(self.arg.name)
         try:
             response = self._connect(url)
             response.raise_for_status()
         except requests.exceptions.HTTPError as ex:
-            self.module.fail_json(msg=str(ex))
+            self.module.fail_json(msg='node does not exist.',
+                                  error=str(ex))
 
-        content = {}
-        if response.content:
-            content = json.loads(response.content)
-
-        node_id = None
-        if 'node_id' in content:
-            node_id = content['node_id']
+        node_id = int(json.loads(response.content)['node_id'])
 
         return node_id
 
@@ -360,21 +378,23 @@ class UpguardNode(object):
     def node(self):
         """Return node details."""
         node_id = self.node_id
-        details = {}
-        if node_id is not None:
-            try:
-                response = self._connect('/nodes/%s.json' % (node_id))
-            except requests.exceptions.HTTPError as ex:
-                self.module.fail_json(msg=str(ex))
-            if response.content:
-                details = json.loads(response.content)
+        url = '/nodes/{}.json'.format(node_id)
+        try:
+            response = self._connect(url)
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as ex:
+            self.module.fail_json(msg='failed querying node details',
+                                  error=str(ex))
+
+        details = json.loads(response.content)
+
         return details
 
     @property
     def exists(self):
         """Node exists."""
         node_exists = True
-        url = '/nodes/lookup.json?name=' + str(self.arg.name)
+        url = '/nodes/lookup.json?name={}'.format(self.arg.name)
         try:
             response = self._connect(url)
             response.raise_for_status()
@@ -384,18 +404,20 @@ class UpguardNode(object):
                 node_exists = False
             else:
                 self.module.fail_json(msg=str(ex))
+
         return node_exists
 
     @property
     def matches(self):
         """Match node to properties."""
         node_matches = True
+        node_details = self.node
+
         # define properties to match
         properties = {'name': self.arg.name,
                       'node_type': self.arg.node_type}
         properties.update(self.arg.properties)
 
-        node_details = self.node
         # match properties
         for key, value in iteritems(properties):
             if key in node_details and value != node_details[key]:
@@ -409,7 +431,8 @@ class UpguardNode(object):
                     group_id = self.group_id(group)
                 group_nodes = self.group_nodes(group_id)
                 if 'error' in group_nodes:
-                    self.module.fail_json(msg=group_nodes['error'])
+                    self.module.fail_json(msg='failed checking groups',
+                                          error=group_nodes['error'])
                 group_matches = [group_node for group_node in group_nodes if
                                  group_node['id'] == self.node_id]
                 if not group_matches:
@@ -419,21 +442,20 @@ class UpguardNode(object):
 
     def create(self):
         """Create node."""
+        url = '/nodes.json'
         # define properties to set
         properties = {'name': self.arg.name,
                       'node_type': self.arg.node_type}
         properties.update(self.arg.properties)
-        url = '/nodes.json'
         try:
             response = self._connect(url, method='post',
                                      data={'node': properties})
             response.raise_for_status()
         except requests.exceptions.HTTPError as ex:
-            self.module.fail_json(msg=str(ex))
+            self.module.fail_json(msg='failed creating node',
+                                  error=str(ex))
 
-        results = {}
-        if response.content:
-            results = json.loads(response.content)
+        results = json.loads(response.content)
 
         return results
 
@@ -441,10 +463,10 @@ class UpguardNode(object):
         """Update node."""
         updated = False
         node_id = self.node_id
+        url = '/nodes/{}.json'.format(node_id)
         # define properties to set
         properties = {'node_type': self.arg.node_type}
         properties.update(self.arg.properties)
-        url = '/nodes/%s.json' % (node_id)
         try:
             response = self._connect(url, method='put',
                                      data={'node': properties})
@@ -452,7 +474,8 @@ class UpguardNode(object):
             if response.status_code == 204:
                 updated = True
         except requests.exceptions.HTTPError as ex:
-            self.module.fail_json(msg=str(ex))
+            self.module.fail_json(msg='failed updating node',
+                                  error=str(ex))
 
         return updated
 
@@ -460,14 +483,15 @@ class UpguardNode(object):
         """Delete node."""
         deleted = False
         node_id = self.node_id
+        url = '/nodes/{}.json'.format(node_id)
         try:
-            url = '/nodes/%s.json' % (node_id)
             response = self._connect(url, method='delete')
             response.raise_for_status()
             if response.status_code == 204:
                 deleted = True
         except requests.exceptions.HTTPError as ex:
-            self.module.fail_json(msg=str(ex))
+            self.module.fail_json(msg='failed deleting node',
+                                  error=str(ex))
 
         return deleted
 
@@ -488,12 +512,13 @@ class UpguardNode(object):
                 group_id = group
                 if isinstance(group, str):
                     group_id = self.group_id(group)
-                self.add_to_group(group_id)
+                self.group_add_node(group_id)
         # validate
         if not self.exists or not self.matches:
             self.module.fail_json(msg="error validating state is present.")
         # gather facts
         self.gather_facts()
+
         return node_changed
 
     def absent(self):
@@ -501,88 +526,73 @@ class UpguardNode(object):
         node_changed = False
         # delete
         if self.exists:
-            self.results['deleted'] = self.delete()
+            self.delete()
             node_changed = True
         # validate
         if self.exists:
             self.module.fail_json(msg="error validating state is absent.")
+
         return node_changed
-
-    def add_to_group(self, group_id):
-        """Add node to group."""
-        added_to_group = False
-        node_id = self.node_id
-        url = '/node_groups/%s/add_nodes.json?node_ids[]=%s' % (group_id,
-                                                                node_id)
-        try:
-            response = self._connect(url, method='post')
-            response.raise_for_status()
-            if response.status_code == 201:
-                added_to_group = True
-        except requests.exceptions.HTTPError as ex:
-            self.module.fail_json(msg=str(ex))
-
-        return added_to_group
 
     def gather_facts(self):
         """Gather facts."""
-        facts = False
         if self.exists:
-            facts = True
             self.results['node'] = self.node
+        else:
+            self.module.fail_json(msg='node does not exist.')
+
         if self.arg.groups is not None:
-            facts = True
             self.results['groups'] = dict()
             for group in self.arg.groups:
                 group_id = group
                 if isinstance(group, str):
                     group_id = self.group_id(group)
                 self.results['groups'][group_id] = self.group_details(group_id)
-        return facts
+
+        return
 
     def job(self, job_id):
         """Return job."""
+        url = '/jobs/{}.json'.format(job_id)
         try:
-            url = '/jobs/%s.json' % (job_id)
             response = self._connect(url)
             response.raise_for_status()
         except requests.exceptions.HTTPError as ex:
-            self.module.fail_json(msg=str(ex))
+            self.module.fail_json(msg='failed querying job',
+                                  error=str(ex))
 
-        content = {}
-        if response.content:
-            content = json.loads(response.content)
+        results = json.loads(response.content)
 
-        return content
+        return results
 
-    def scan(self, label='ansible initiated', sleep=120):
+    def scan(self):
         """Scan node."""
+        job = None
         node_id = self.node_id
+        label = self.arg.scan_label
+        timeout = self.arg.scan_timeout
+        url = '/nodes/{}/start_scan.json?label={}'.format(node_id, label)
         try:
-            url = '/nodes/%s/start_scan.json?label=%s' % (node_id, label)
             response = self._connect(url, method='post')
             response.raise_for_status()
         except requests.exceptions.HTTPError as ex:
-            self.module.fail_json(msg=str(ex))
+            self.module.fail_json(msg='failed to create scan',
+                                  error=str(ex))
 
-        content = {}
-        if response.content:
-            content = json.loads(response.content)
+        job_id = int(json.loads(response.content)['job_id'])
 
-        if 'job_id' not in content:
-            self.module.fail_json(msg='failed to create scan job.')
-        job_id = content['job_id']
-
-        job = None
-        for pause in range(sleep):
+        for count in range(timeout + 1):
             job = self.job(job_id)
             status = job['status']
-            if status == 2:
+            if status == 0 or status == 1:
+                if count == timeout:
+                    msg = 'timed out after {}s waiting for scan'.format(count)
+                    self.module.fail_json(msg=msg, scan=job)
+                time.sleep(1)
+            elif status == 2:
                 break
             elif status == -1 or status > 2:
-                self.module.fail_json(msg='scan failed or timed out waiting.')
-            elif status < 2:
-                time.sleep(pause)
+                self.module.fail_json(msg='scan failed', scan=job)
 
         return job
 
@@ -592,7 +602,6 @@ def main():
     module = AnsibleModule(
         argument_spec=dict(
             url=dict(type='str', required=True),
-            port=dict(type='int', default=443),
             username=dict(type='str', required=True),
             password=dict(type='str', required=True, no_log=True),
             gather_facts=dict(type='bool', default=False),
@@ -602,6 +611,8 @@ def main():
             properties=dict(type='dict', default=None),
             groups=dict(type='list', default=None),
             scan=dict(type='bool', default=False),
+            scan_label=dict(type='str', default='ansible initiated'),
+            scan_timeout=dict(type='int', default=120),
             validate_certs=dict(type='bool', default=True),
         ),
         supports_check_mode=True
@@ -622,7 +633,7 @@ def main():
     # gather facts
     if module.params['gather_facts']:
         with UpguardNode(module) as upguard:
-            upguard.results['gather_facts'] = upguard.gather_facts()
+            upguard.gather_facts()
             module.exit_json(**upguard.results)
 
     # process
