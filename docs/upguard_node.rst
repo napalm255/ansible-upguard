@@ -333,7 +333,7 @@ Common return values are documented here :doc:`common_return_values`, the follow
         <tr>
         <td> node </td>
         <td> node details </td>
-        <td align=center> present </td>
+        <td align=center> state==present or gather_facts==true </td>
         <td align=center> dict </td>
         <td align=center> "node": {
     "created_at": "2017-01-26T22:37:12.866-05:00",
@@ -341,6 +341,22 @@ Common return values are documented here :doc:`common_return_values`, the follow
     "environment_id": 7,
     "id": 1117
     }
+ </td>
+    </tr>
+            <tr>
+        <td> groups </td>
+        <td> group details </td>
+        <td align=center> ['state==present or gather_facts==true', 'groups is not None'] </td>
+        <td align=center> dict </td>
+        <td align=center> "groups": [{},{}]
+ </td>
+    </tr>
+            <tr>
+        <td> scan </td>
+        <td> scan job details </td>
+        <td align=center> scan==true </td>
+        <td align=center> dict </td>
+        <td align=center> "scan": {}
  </td>
     </tr>
         
