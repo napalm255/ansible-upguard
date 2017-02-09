@@ -100,7 +100,7 @@ Options
     <td>no</td>
     <td></td>
         <td><ul><li>present</li><li>absent</li></ul></td>
-        <td><div>Create or delete node.</div><div>When <em>state</em> is set to <code>present</code> facts will be gathered.</div></td></tr>
+        <td><div>Create or delete node.</div><div>When <code>state=present</code> facts will be gathered.</div></td></tr>
             <tr>
     <td>url<br/><div style="font-size: small;"></div></td>
     <td>yes</td>
