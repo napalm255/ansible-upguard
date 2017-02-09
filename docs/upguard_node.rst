@@ -76,7 +76,7 @@ Options
     <td>no</td>
     <td></td>
         <td><ul><li>dict</li></ul></td>
-        <td><div>Properties of the node.</div><div>See <a href='https://support.upguard.com/upguard/nodes-api-v2.html#create'>https://support.upguard.com/upguard/nodes-api-v2.html#create</a>.</div><div>Invalid or misspelled properties will be ignored.</div><div>Property values are not validated.</div></td></tr>
+        <td><div>Properties of the node.</div><div>See <a href='https://support.upguard.com/upguard/nodes-api-v2.html#create'>https://support.upguard.com/upguard/nodes-api-v2.html#create</a>.</div><div>Invalid or misspelled properties will be ignored.</div><div>Property values are not verified for legitimacy. They will be tried as-is.</div></td></tr>
             <tr>
     <td>scan<br/><div style="font-size: small;"></div></td>
     <td>no</td>
@@ -137,6 +137,11 @@ Examples
         name: "node_name"
         node_type: "SV"
         state: "present"
+        properties:
+            short_description: web server
+            medium_type: 3
+            medium_port: 22
+            operating_system_family_id: 2
     
     # delete node
     - upguard_node:

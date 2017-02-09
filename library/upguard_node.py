@@ -96,7 +96,7 @@ options:
             - Properties of the node.
             - See U(https://support.upguard.com/upguard/nodes-api-v2.html#create).
             - Invalid or misspelled properties will be ignored.
-            - Property values are not validated.
+            - Property values are not verified for legitimacy. They will be tried as-is.
     groups:
         required: false
         choices:
@@ -142,6 +142,11 @@ EXAMPLES = '''
     name: "node_name"
     node_type: "SV"
     state: "present"
+    properties:
+        short_description: web server
+        medium_type: 3
+        medium_port: 22
+        operating_system_family_id: 2
 
 # delete node
 - upguard_node:
