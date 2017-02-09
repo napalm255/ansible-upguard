@@ -76,7 +76,7 @@ Options
     <td>no</td>
     <td></td>
         <td><ul><li>dict</li></ul></td>
-        <td><div>Properties of the node.</div><div>See <a href='https://support.upguard.com/upguard/nodes-api-v2.html#create'>https://support.upguard.com/upguard/nodes-api-v2.html#create</a>.</div></td></tr>
+        <td><div>Properties of the node.</div><div>See <a href='https://support.upguard.com/upguard/nodes-api-v2.html#create'>https://support.upguard.com/upguard/nodes-api-v2.html#create</a>.</div><div>Invalid or misspelled properties will be ignored.</div><div>Property values are not validated.</div></td></tr>
             <tr>
     <td>scan<br/><div style="font-size: small;"></div></td>
     <td>no</td>
