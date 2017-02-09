@@ -29,11 +29,17 @@ su - vagrant -c "touch /home/vagrant/.ssh/known_hosts"
 echo "Setting up ansible-devel:"
 su - vagrant -c "rm -Rf /home/vagrant/ansible-devel"
 su - vagrant -c "git clone https://github.com/ansible/ansible.git /home/vagrant/ansible-devel"
+su - vagrant -c "rm -Rf /home/vagrant/ansible-devel/lib/ansible/modules/*"
+su - vagrant -c "touch /home/vagrant/ansible-devel/lib/ansible/modules/__init__.py"
 su - vagrant -c "mkdir -p /home/vagrant/ansible-devel/lib/ansible/modules/custom"
 su - vagrant -c "ln -s /vagrant/library/* /home/vagrant/ansible-devel/lib/ansible/modules/custom"
 
 # Update mlocate database
 updatedb
+
+# Install powerbash
+curl -Ls https://raw.githubusercontent.com/napalm255/powerbash/master/powerbash.sh > /etc/profile.d/z_powerbash.sh
+su - vagrant -c "echo POWERBASH_HOST=off >> /home/vagrant/.powerbash_config"
 
 # Output installed python packages
 echo "Installed Python Packages:"
@@ -41,4 +47,4 @@ python --version
 pip list --format=columns
 
 # End bootstrap
-echo "Bootstrap Complete!"
+echo "BOOTSTRAP COMPLETE!"
