@@ -87,7 +87,7 @@ options:
             - absent
         description:
             - Create or delete node.
-            - When I(state) is set to C(present) facts will be gathered.
+            - When C(state=present) facts will be gathered.
     properties:
         required: false
         choices:
