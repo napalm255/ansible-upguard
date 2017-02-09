@@ -95,6 +95,8 @@ options:
         description:
             - Properties of the node.
             - See U(https://support.upguard.com/upguard/nodes-api-v2.html#create).
+            - Invalid or misspelled properties will be ignored.
+            - Property values are not validated.
     groups:
         required: false
         choices:
