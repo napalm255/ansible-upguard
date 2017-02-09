@@ -28,7 +28,7 @@ ANSIBLE_METADATA = {'status': ['preview'],
 DOCUMENTATION = '''
 ---
 module: upguard_node
-author: "Brad Gibson (napalm255)"
+author: "Brad Gibson, @napalm255"
 version_added: "2.3"
 short_description: Manage UpGuard Node
 requirements:
