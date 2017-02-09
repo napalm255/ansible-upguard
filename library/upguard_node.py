@@ -260,7 +260,22 @@ scan:
     description: scan job details
     returned: scan is true
     type: dict
-    sample: {}
+    sample: {
+        "created_at": "2017-02-08T23:46:30.143-05:00",
+        "created_by": 8,
+        "diff_stats": null,
+        "id": 780,
+        "organisation_id": 4,
+        "scheduled_job_id": null,
+        "source_id": 1117,
+        "source_name": "SOME_NODE_NAME",
+        "source_type": 11,
+        "stats": null,
+        "status": -1,
+        "updated_at": "2017-02-08T23:46:37.133-05:00",
+        "updated_by": 8,
+        "upload_node_id": 1117
+    }
 
 '''
 
