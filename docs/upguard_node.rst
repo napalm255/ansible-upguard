@@ -215,7 +215,7 @@ Common return values are documented here :doc:`common_return_values`, the follow
         <td> scan job details </td>
         <td align=center> scan is true </td>
         <td align=center> dict </td>
-        <td align=center> {} </td>
+        <td align=center> {'status': -1, 'organisation_id': 4, 'source_name': 'SOME_NODE_NAME', 'updated_by': 8, 'created_at': '2017-02-08T23:46:30.143-05:00', 'updated_at': '2017-02-08T23:46:37.133-05:00', 'created_by': 8, 'scheduled_job_id': None, 'source_type': 11, 'diff_stats': None, 'source_id': 1117, 'stats': None, 'upload_node_id': 1117, 'id': 780} </td>
     </tr>
         
     </table>
