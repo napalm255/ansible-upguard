@@ -1,0 +1,13 @@
+---
+version: 0.1
+
+phases:
+  install:
+    commands:
+      - pip install pip --upgrade
+      - pip install virtualenv tox
+  build:
+    commands:
+      - python --version
+      - pip list
+      - tox -e py27
