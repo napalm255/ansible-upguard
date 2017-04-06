@@ -1,5 +1,5 @@
 -rrequirements.txt
-tox==2.6.0
+tox==2.7.0
 yamllint==1.6.1
 Sphinx==1.5.2
 pytest==3.0.6
