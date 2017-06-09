@@ -2,7 +2,7 @@
 tox==2.6.0
 yamllint==1.6.1
 Sphinx==1.5.2
-pytest==3.0.6
+pytest==3.1.2
 pytest-pep8==1.0.6
 pydocstyle==1.1.1
 
