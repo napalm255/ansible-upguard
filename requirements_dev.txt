@@ -4,7 +4,7 @@ yamllint==1.37.1
 Sphinx==1.5.2
 pytest==8.4.0
 pytest-pep8==1.0.6
-pydocstyle==6.2.3
+pydocstyle==6.3.0
 
 # Python 2.6 Support
 astroid==1.2.1; python_version < '2.7' # pyup: ==1.2.1
